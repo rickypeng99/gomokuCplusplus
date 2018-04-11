@@ -2,6 +2,7 @@
 ## Intro
 In my project, I hope to make a program that automatically finds a best-fit line that defines the linear relationship of 2 variables.<br>
 For instance, you can have the prices of a product as Y axis, and amount of people willing to buy as the x axis. By inputing the data for two variables correspondingly, the program can find a best fit line that shows the price elasticity of this product.<br> 
+This technique is also called as Linear Regression
 
 ## Visual example:
 Notice how the points are not on a straight line, but you can find a best-fit line that is closest to determine the linear relationship between the two variables.<br>
