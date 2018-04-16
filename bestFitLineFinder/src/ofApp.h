@@ -1,15 +1,24 @@
 #pragma once
 
 #include "ofMain.h"
+enum DrawType {
+    MAKE_BOARD,
+    BLACK,
+    WHITE,
+};
 
 class ofApp : public ofBaseApp{
 
+    
 	public:
+    
+    DrawType current_draw = MAKE_BOARD;
+    const int size = 15; // The size of the board, 15 means 15*15
+    ofColor intersection;
 		void setup();
 		void update();
 		void draw();
-
-		void keyPressed(int key);
+        void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
 		void mouseDragged(int x, int y, int button);
@@ -20,11 +29,16 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-    int realX(int x);
-    int realY(int y);
-		
     
+    void drawBoard();
+    void drawRecord();
     int xPos;
     int yPos;
+    
+    Boolean isIntersection(int x, int y);
+    
     Boolean should_update;
+    
+    std::tuple<int, int, int> dot;
+    vector<std::tuple<int, int, int>> records;
 };
