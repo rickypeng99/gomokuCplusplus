@@ -20,5 +20,11 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    int realX(int x);
+    int realY(int y);
 		
+    
+    int xPos;
+    int yPos;
+    Boolean should_update;
 };
