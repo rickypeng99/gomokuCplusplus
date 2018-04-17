@@ -1,5 +1,5 @@
 #include "ofApp.h"
-
+#include <math.h>
 //--------------------------------------------------------------
 void ofApp::setup(){
 
@@ -17,12 +17,15 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     drawBoard();
-    current_draw = BLACK;
     drawRecord();
     if (current_draw == BLACK) {
         ofSetColor(0, 0, 0);
-        ofDrawCircle(xPos, yPos, 10);
+        ofDrawCircle(xPos, yPos, 25);
         records.push_back(make_tuple(xPos, yPos, 0));
+    } else if (current_draw == WHITE) {
+        ofSetColor(255, 255, 255);
+        ofDrawCircle(xPos, yPos, 25);
+        records.push_back(make_tuple(xPos, yPos, 1));
     }
 
 }
@@ -53,10 +56,11 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    if (button == 0 && isIntersection(x, y)) {
-        xPos = x;
-        yPos = y;
-        update();
+    if (button == 0) {
+        if (autoDraw(x, y)) {
+            update();
+            changeTurn();
+        }
     }
 
 
@@ -119,7 +123,10 @@ void ofApp::drawRecord(){
         int y = std::get<1>(records.at(i));
         if (std::get<2>(records.at(i)) == 0) {
             ofSetColor(0, 0, 0);
-            ofDrawCircle(x, y, 10);
+            ofDrawCircle(x, y, 25);
+        } else if (std::get<2>(records.at(i)) == 1) {
+            ofSetColor(255, 255, 255);
+            ofDrawCircle(x, y, 25);
         }
     }
 }
@@ -131,4 +138,25 @@ Boolean ofApp::isIntersection(int x, int y) {
         return false;
     }
     return ((x % (ofGetWindowWidth() / 15) == 0) && (y % (ofGetWindowHeight() / 15) == 0));
+}
+
+Boolean ofApp::autoDraw(int x, int y) {
+    for (int xp = 0; xp < ofGetWindowWidth(); xp++) {
+        for (int yp = 0; yp < ofGetWindowHeight(); yp++) {
+            if (isIntersection(xp, yp) && (sqrt(pow((xp - x), 2) + pow((yp-y), 2))) <= 5){
+                xPos = xp;
+                yPos = yp;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void ofApp::changeTurn() {
+    if (current_draw == BLACK) {
+        current_draw = WHITE;
+    } else {
+        current_draw = BLACK;
+    }
 }
