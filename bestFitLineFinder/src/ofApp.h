@@ -9,9 +9,9 @@ enum DrawType {
 
 class ofApp : public ofBaseApp{
 
-    
+
 	public:
-    
+
     DrawType current_draw = MAKE_BOARD;
     const int size = 15; // The size of the board, 15 means 15*15
     ofColor intersection;
@@ -29,16 +29,16 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-    
+
     void drawBoard();
     void drawRecord();
     int xPos;
     int yPos;
-    
+
     Boolean isIntersection(int x, int y);
-    
+
     Boolean should_update;
-    
+
     std::tuple<int, int, int> dot;
     vector<std::tuple<int, int, int>> records;
 };

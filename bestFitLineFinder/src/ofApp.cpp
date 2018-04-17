@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-   
+
     ofSetBackgroundColor(182, 155, 76);
     intersection.r = 169;
     intersection.g = 169;
@@ -11,7 +11,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
+
 }
 
 //--------------------------------------------------------------
@@ -24,7 +24,7 @@ void ofApp::draw(){
         ofDrawCircle(xPos, yPos, 10);
         records.push_back(make_tuple(xPos, yPos, 0));
     }
-    
+
 }
 
 //--------------------------------------------------------------
@@ -58,8 +58,8 @@ void ofApp::mousePressed(int x, int y, int button){
         yPos = y;
         update();
     }
-    
-    
+
+
 }
 
 //--------------------------------------------------------------
@@ -88,7 +88,7 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
@@ -97,12 +97,12 @@ void ofApp::drawBoard(){
         ofSetColor(0, 0, 0);
         ofDrawLine(0, y, ofGetWindowWidth() , y);
     }
-    
+
     for (int x = 0; x < ofGetWindowWidth(); x+=ofGetWindowWidth()/15) {
         ofSetColor(0, 0, 0);
         ofDrawLine(x, 0, x , ofGetWindowHeight());
     }
-    
+
     for (int x = 0; x < ofGetWindowWidth(); x++) {
         for (int y = 0; y < ofGetWindowHeight(); y++) {
             if (isIntersection(x, y)){
@@ -132,4 +132,3 @@ Boolean ofApp::isIntersection(int x, int y) {
     }
     return ((x % (ofGetWindowWidth() / 15) == 0) && (y % (ofGetWindowHeight() / 15) == 0));
 }
-
