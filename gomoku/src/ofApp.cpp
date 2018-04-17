@@ -53,7 +53,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    if (button == 0 || isIntersection(xPos, yPos)) {
+    if (button == 0 && isIntersection(x, y)) {
         xPos = x;
         yPos = y;
         update();
