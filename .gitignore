@@ -1,7 +1,7 @@
 *.txt
 *.cmake
 CMakeScripts/
-bestFitLineFinder.xcodeproj
+gomoku.xcodeproj
 simple_example.xcodeproj
 CMakeFiles/
 .DS_Store
