@@ -29,7 +29,7 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-    
+
     void changeTurn();
     void drawBoard();
     void drawRecord();
@@ -38,7 +38,7 @@ class ofApp : public ofBaseApp{
 
     Boolean isIntersection(int x, int y);
     Boolean autoDraw(int x, int y);
-    
+
     Boolean should_update;
 
     std::tuple<int, int, int> dot;
