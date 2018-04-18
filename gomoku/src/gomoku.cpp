@@ -1,65 +1,79 @@
-#include "ofApp.h"
+#include "gomoku.h"
 #include <math.h>
+
 //--------------------------------------------------------------
-void ofApp::setup(){
+void gomoku::setup(){
+
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - 1; j++) {
+            board[i][j] = EMPTY;
+        }
+    }
 
     ofSetBackgroundColor(182, 155, 76);
+
     intersection.r = 169;
     intersection.g = 169;
     intersection.b = 169;
-}
-
-//--------------------------------------------------------------
-void ofApp::update(){
+    
+    current_draw = MAKE_BOARD;
 
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
+void gomoku::update(){
+
+}
+
+//--------------------------------------------------------------
+void gomoku::draw(){
     drawBoard();
     drawRecord();
-    if (current_draw == BLACK) {
+    
+    if (current_draw == MAKE_BLACK) {
         ofSetColor(0, 0, 0);
         ofDrawCircle(xPos, yPos, 25);
-        records.push_back(make_tuple(xPos, yPos, 0));
-    } else if (current_draw == WHITE) {
+        records.push_back(make_tuple(xPos, yPos, BLACK));
+        board[xPos / 15][yPos / 15] = BLACK;
+    } else if (current_draw == MAKE_WHITE) {
         ofSetColor(255, 255, 255);
         ofDrawCircle(xPos, yPos, 25);
-        records.push_back(make_tuple(xPos, yPos, 1));
+        records.push_back(make_tuple(xPos, yPos, WHITE));
+        board[xPos / 15][yPos / 15] = WHITE;
+
     }
 
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-    int upper_key = toupper(key);
-    if (upper_key == 'W') {
-        should_update = true;
-        update();
-    }
+void gomoku::keyPressed(int key){
+    
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
+void gomoku::keyReleased(int key){
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
+void gomoku::mouseMoved(int x, int y ){
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
+void gomoku::mouseDragged(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
+void gomoku::mousePressed(int x, int y, int button){
     if (button == 0) {
         if (autoDraw(x, y)) {
+
             update();
             changeTurn();
+
+
         }
     }
 
@@ -67,36 +81,36 @@ void ofApp::mousePressed(int x, int y, int button){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
+void gomoku::mouseReleased(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
+void gomoku::mouseEntered(int x, int y){
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
+void gomoku::mouseExited(int x, int y){
 
 }
 
 //--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
+void gomoku::windowResized(int w, int h){
 
 }
 
 //--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
+void gomoku::gotMessage(ofMessage msg){
 
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){
+void gomoku::dragEvent(ofDragInfo dragInfo){
 
 }
 
-void ofApp::drawBoard(){
+void gomoku::drawBoard(){
     for (int y = 0; y < ofGetWindowHeight(); y += ofGetWindowHeight()/15) {
         ofSetColor(0, 0, 0);
         ofDrawLine(0, y, ofGetWindowWidth() , y);
@@ -117,14 +131,14 @@ void ofApp::drawBoard(){
     }
 }
 
-void ofApp::drawRecord(){
+void gomoku::drawRecord(){
     for (int i = 0; i < records.size(); i++) {
         int x = std::get<0>(records.at(i));
         int y = std::get<1>(records.at(i));
-        if (std::get<2>(records.at(i)) == 0) {
+        if (std::get<2>(records.at(i)) == BLACK) {
             ofSetColor(0, 0, 0);
             ofDrawCircle(x, y, 25);
-        } else if (std::get<2>(records.at(i)) == 1) {
+        } else if (std::get<2>(records.at(i)) == WHITE) {
             ofSetColor(255, 255, 255);
             ofDrawCircle(x, y, 25);
         }
@@ -133,30 +147,43 @@ void ofApp::drawRecord(){
 
 
 
-Boolean ofApp::isIntersection(int x, int y) {
+Boolean gomoku::isIntersection(int x, int y) {
     if (x == 0 || y == 0) {
         return false;
     }
     return ((x % (ofGetWindowWidth() / 15) == 0) && (y % (ofGetWindowHeight() / 15) == 0));
 }
 
-Boolean ofApp::autoDraw(int x, int y) {
+Boolean gomoku::autoDraw(int x, int y) {
     for (int xp = 0; xp < ofGetWindowWidth(); xp++) {
         for (int yp = 0; yp < ofGetWindowHeight(); yp++) {
             if (isIntersection(xp, yp) && (sqrt(pow((xp - x), 2) + pow((yp-y), 2))) <= 5){
                 xPos = xp;
                 yPos = yp;
-                return true;
+                if (board[xPos / 15][yPos / 15] == EMPTY) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     }
     return false;
 }
 
-void ofApp::changeTurn() {
-    if (current_draw == BLACK) {
-        current_draw = WHITE;
+void gomoku::changeTurn() {
+    if (current_draw == MAKE_BLACK) {
+        current_draw = MAKE_WHITE;
     } else {
-        current_draw = BLACK;
+        current_draw = MAKE_BLACK;
+    }
+}
+
+void gomoku::printBoard() {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - 1; j++) {
+            std::cout << board[i][j];
+        }
+        std::cout << std::endl;
     }
 }

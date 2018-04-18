@@ -3,19 +3,26 @@
 #include "ofMain.h"
 enum DrawType {
     MAKE_BOARD,
-    BLACK,
-    WHITE
+    MAKE_BLACK,
+    MAKE_WHITE
 };
 
-class ofApp : public ofBaseApp{
+class gomoku : public ofBaseApp{
 
+    public:
 
-	public:
+    const int EMPTY = 0;
+    const int BLACK = 1;
+    const int WHITE = 2;
 
-    DrawType current_draw = MAKE_BOARD;
     const int size = 15; // The size of the board, 15 means 15*15
+
+    int board[14][14];
+    DrawType current_draw;
     ofColor intersection;
-		void setup();
+
+        // Methods to interact with the UI
+        void setup();
 		void update();
 		void draw();
         void keyPressed(int key);
@@ -35,6 +42,7 @@ class ofApp : public ofBaseApp{
     void drawRecord();
     int xPos;
     int yPos;
+    void printBoard();
 
     Boolean isIntersection(int x, int y);
     Boolean autoDraw(int x, int y);
