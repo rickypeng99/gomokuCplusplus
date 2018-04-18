@@ -15,7 +15,7 @@ void gomoku::setup(){
     intersection.r = 169;
     intersection.g = 169;
     intersection.b = 169;
-    
+
     current_draw = MAKE_BOARD;
 
 }
@@ -29,17 +29,17 @@ void gomoku::update(){
 void gomoku::draw(){
     drawBoard();
     drawRecord();
-    
+
     if (current_draw == MAKE_BLACK) {
         ofSetColor(0, 0, 0);
         ofDrawCircle(xPos, yPos, 25);
         records.push_back(make_tuple(xPos, yPos, BLACK));
-        board[xPos / 15][yPos / 15] = BLACK;
+        board[(xPos / 51) - 1][(yPos / 51) - 1] = BLACK;
     } else if (current_draw == MAKE_WHITE) {
         ofSetColor(255, 255, 255);
         ofDrawCircle(xPos, yPos, 25);
         records.push_back(make_tuple(xPos, yPos, WHITE));
-        board[xPos / 15][yPos / 15] = WHITE;
+        board[(xPos / 51) - 1][(yPos / 51) - 1] = WHITE;
 
     }
 
@@ -47,7 +47,7 @@ void gomoku::draw(){
 
 //--------------------------------------------------------------
 void gomoku::keyPressed(int key){
-    
+
 }
 
 //--------------------------------------------------------------
@@ -160,11 +160,13 @@ Boolean gomoku::autoDraw(int x, int y) {
             if (isIntersection(xp, yp) && (sqrt(pow((xp - x), 2) + pow((yp-y), 2))) <= 5){
                 xPos = xp;
                 yPos = yp;
-                if (board[xPos / 15][yPos / 15] == EMPTY) {
+                std::cout << xp << std::endl;
+                if (board[(xp / 51) - 1][(yp / 51) - 1] == EMPTY) {
                     return true;
                 } else {
                     return false;
                 }
+                return true;
             }
         }
     }
