@@ -2,9 +2,15 @@
 
 #include "ofMain.h"
 enum DrawType {
-    MAKE_BOARD,
     MAKE_BLACK,
     MAKE_WHITE
+};
+
+enum GameState {
+    START,
+    NO_PLACE,
+    PLACE,
+    END
 };
 
 class gomoku : public ofBaseApp{
@@ -16,9 +22,13 @@ class gomoku : public ofBaseApp{
     const int WHITE = 2;
 
     const int size = 15; // The size of the board, 15 means 15*15
+    int unit_width;
+    int unit_height;
 
     int board[14][14];
+    
     DrawType current_draw;
+    GameState current_state;
     ofColor intersection;
 
         // Methods to interact with the UI
@@ -43,12 +53,14 @@ class gomoku : public ofBaseApp{
     int xPos;
     int yPos;
     void printBoard();
+    
 
     Boolean isIntersection(int x, int y);
     Boolean autoDraw(int x, int y);
+    Boolean isWin();
 
     Boolean should_update;
 
-    std::tuple<int, int, int> dot;
-    vector<std::tuple<int, int, int>> records;
+    //std::tuple<int, int, int> dot;
+    //vector<std::tuple<int, int, int>> records;
 };

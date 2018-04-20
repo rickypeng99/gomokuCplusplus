@@ -1,6 +1,7 @@
 #include "gomoku.h"
 #include <math.h>
 
+
 //--------------------------------------------------------------
 void gomoku::setup(){
 
@@ -16,7 +17,12 @@ void gomoku::setup(){
     intersection.g = 169;
     intersection.b = 169;
 
-    current_draw = MAKE_BOARD;
+    current_draw = MAKE_BLACK;
+    current_state = START;
+    
+    unit_width = ofGetWindowWidth() / size;
+    unit_height = ofGetWindowHeight() / size;
+
 
 }
 
@@ -27,27 +33,45 @@ void gomoku::update(){
 
 //--------------------------------------------------------------
 void gomoku::draw(){
-    drawBoard();
-    drawRecord();
+    if (current_state == START) {
+        drawBoard();
+    }
+    
+        if (current_state == PLACE) {
+            if (current_draw == MAKE_BLACK) {
+                ofSetColor(0, 0, 0);
+                ofDrawCircle(xPos, yPos, 25);
+                //records.push_back(make_tuple(xPos, yPos, BLACK));
+                board[(xPos / unit_width) - 1][(yPos / unit_height) - 1] = BLACK;
 
-    if (current_draw == MAKE_BLACK) {
+            } else if (current_draw == MAKE_WHITE) {
+                ofSetColor(255, 255, 255);
+                ofDrawCircle(xPos, yPos, 25);
+                //records.push_back(make_tuple(xPos, yPos, WHITE));
+                board[(xPos / unit_width) - 1][(yPos / unit_height) - 1] = WHITE;
+
+
+            }
+        }
+    
+       else if (current_state == END) {
         ofSetColor(0, 0, 0);
-        ofDrawCircle(xPos, yPos, 25);
-        records.push_back(make_tuple(xPos, yPos, BLACK));
-        board[(xPos / 51) - 1][(yPos / 51) - 1] = BLACK;
-    } else if (current_draw == MAKE_WHITE) {
-        ofSetColor(255, 255, 255);
-        ofDrawCircle(xPos, yPos, 25);
-        records.push_back(make_tuple(xPos, yPos, WHITE));
-        board[(xPos / 51) - 1][(yPos / 51) - 1] = WHITE;
-
+        ofDrawBitmapString("Someone has won!\n Press R to restart!", ofGetWindowWidth() / 2, ofGetWindowHeight() / 2);
     }
 
 }
 
 //--------------------------------------------------------------
 void gomoku::keyPressed(int key){
-
+    int upper_key = toupper(key); // Standardize on upper case
+    
+    if (upper_key == 'R' && current_state == END) {
+        // Pause or unpause
+        current_state = START;
+        ofClear(182, 155, 76);
+        memset(board, 0, sizeof(board));
+        draw();
+    }
 }
 
 //--------------------------------------------------------------
@@ -69,10 +93,20 @@ void gomoku::mouseDragged(int x, int y, int button){
 void gomoku::mousePressed(int x, int y, int button){
     if (button == 0) {
         if (autoDraw(x, y)) {
-
-            update();
-            changeTurn();
-
+            current_state = PLACE;
+            draw();
+            //printBoard();
+            
+            if (isWin()) {
+                //std::cout << "win!" << std::endl;
+                current_state = END;
+                draw();
+            }
+            
+            if (current_state != END) {
+                changeTurn();
+                current_state = NO_PLACE;
+            }
 
         }
     }
@@ -131,19 +165,19 @@ void gomoku::drawBoard(){
     }
 }
 
-void gomoku::drawRecord(){
-    for (int i = 0; i < records.size(); i++) {
-        int x = std::get<0>(records.at(i));
-        int y = std::get<1>(records.at(i));
-        if (std::get<2>(records.at(i)) == BLACK) {
-            ofSetColor(0, 0, 0);
-            ofDrawCircle(x, y, 25);
-        } else if (std::get<2>(records.at(i)) == WHITE) {
-            ofSetColor(255, 255, 255);
-            ofDrawCircle(x, y, 25);
-        }
-    }
-}
+//void gomoku::drawRecord(){
+//    for (int i = 0; i < records.size(); i++) {
+//        int x = std::get<0>(records.at(i));
+//        int y = std::get<1>(records.at(i));
+//        if (std::get<2>(records.at(i)) == BLACK) {
+//            ofSetColor(0, 0, 0);
+//            ofDrawCircle(x, y, 25);
+//        } else if (std::get<2>(records.at(i)) == WHITE) {
+//            ofSetColor(255, 255, 255);
+//            ofDrawCircle(x, y, 25);
+//        }
+//    }
+//}
 
 
 
@@ -155,18 +189,19 @@ Boolean gomoku::isIntersection(int x, int y) {
 }
 
 Boolean gomoku::autoDraw(int x, int y) {
+    if (current_state == END) {
+        return false;
+    }
     for (int xp = 0; xp < ofGetWindowWidth(); xp++) {
         for (int yp = 0; yp < ofGetWindowHeight(); yp++) {
             if (isIntersection(xp, yp) && (sqrt(pow((xp - x), 2) + pow((yp-y), 2))) <= 5){
                 xPos = xp;
                 yPos = yp;
-                std::cout << xp << std::endl;
-                if (board[(xp / 51) - 1][(yp / 51) - 1] == EMPTY) {
+                if (board[(xPos / unit_width) - 1][(yPos / unit_height) - 1] == EMPTY) {
                     return true;
                 } else {
                     return false;
                 }
-                return true;
             }
         }
     }
@@ -176,16 +211,97 @@ Boolean gomoku::autoDraw(int x, int y) {
 void gomoku::changeTurn() {
     if (current_draw == MAKE_BLACK) {
         current_draw = MAKE_WHITE;
+
     } else {
         current_draw = MAKE_BLACK;
+
     }
 }
 
+//printing the trasnpose of the matrix, which digitally visulizes the game board and stones.
 void gomoku::printBoard() {
-    for (int i = 0; i < size - 1; i++) {
-        for (int j = 0; j < size - 1; j++) {
-            std::cout << board[i][j];
+    for (int i = 0; i < size - 1; ++i) {
+        for (int j = 0; j < size - 1; ++j) {
+            std::cout << board[j][i];
         }
         std::cout << std::endl;
     }
+    
+    std::cout << std::endl;
+}
+
+Boolean gomoku::isWin() {
+    
+    for (int i = 0; i < size - 1; ++i) {
+        for (int j = 0; j < size - 1; ++j) {
+            int current_color = board[j][i];
+
+            //skip the ones that are in the middle of a connection (only validate the ones that are at front)
+
+            if (j > 0 && j < size - 2 && i > 0 && i < size - 2
+                && (((board[j - 1][i]) == current_color)
+                || ((board[j][i-1]) == current_color)
+                || ((board[j-1][i-1]) == current_color)
+                || ((board[j+1][i-1]) == current_color))) {
+                    continue;
+                }
+                
+            //check right - connect 5
+            if (board[j][i] != EMPTY && (j + 4) <= (size - 2)) {
+                for (int count = 1; count < 5; count++) {
+                    if (board[j + count][i] == current_color) {
+                        if (count == 4) {
+                            return true;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            
+            //check downward right - connect 5
+            if (board[j][i] != EMPTY && (i + 4) <= (size - 2) && (j + 4) <= (size - 2)) {
+                int current_color = board[j][i];
+                for (int count = 1; count < 5; count++) {
+                    if (board[j + count][i + count] == current_color) {
+                        if (count == 4) {
+                            return true;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            
+            //check downward - connect 5
+            if (board[j][i] != EMPTY && (i + 4) <= (size - 2)) {
+                int current_color = board[j][i];
+                for (int count = 1; count < 5; count++) {
+                    if (board[j][i + count] == current_color) {
+                        if (count == 4) {
+                            return true;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            
+            //check downward left - connect 5
+            
+            if (board[j][i] != EMPTY && (i + 4) <= (size - 2) && (j - 4) >= 0) {
+                int current_color = board[j][i];
+                for (int count = 1; count < 5; count++) {
+                    if (board[j - count][i + count] == current_color) {
+                        if (count == 4) {
+                            return true;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return false;
 }
