@@ -11,6 +11,7 @@ void gomoku::setup(){
         }
     }
 
+
     ofSetBackgroundColor(182, 155, 76);
 
     intersection.r = 169;
@@ -38,16 +39,15 @@ void gomoku::draw(){
     }
     
         if (current_state == PLACE) {
+            
             if (current_draw == MAKE_BLACK) {
                 ofSetColor(0, 0, 0);
                 ofDrawCircle(xPos, yPos, 25);
-                //records.push_back(make_tuple(xPos, yPos, BLACK));
                 board[(xPos / unit_width) - 1][(yPos / unit_height) - 1] = BLACK;
 
             } else if (current_draw == MAKE_WHITE) {
                 ofSetColor(255, 255, 255);
                 ofDrawCircle(xPos, yPos, 25);
-                //records.push_back(make_tuple(xPos, yPos, WHITE));
                 board[(xPos / unit_width) - 1][(yPos / unit_height) - 1] = WHITE;
 
 
@@ -56,7 +56,7 @@ void gomoku::draw(){
     
        else if (current_state == END) {
         ofSetColor(0, 0, 0);
-        ofDrawBitmapString("Someone has won!\n Press R to restart!", ofGetWindowWidth() / 2, ofGetWindowHeight() / 2);
+        ofDrawBitmapString(winner + " has won!\nPress R to restart!", ofGetWindowWidth() / 2, ofGetWindowHeight() / 2);
     }
 
 }
@@ -103,15 +103,15 @@ void gomoku::mousePressed(int x, int y, int button){
                 draw();
             }
             
+            
             if (current_state != END) {
                 changeTurn();
+                placeUnder((xPos / unit_width), (yPos / unit_height));
                 current_state = NO_PLACE;
             }
 
         }
     }
-
-
 }
 
 //--------------------------------------------------------------
@@ -145,12 +145,12 @@ void gomoku::dragEvent(ofDragInfo dragInfo){
 }
 
 void gomoku::drawBoard(){
-    for (int y = 0; y < ofGetWindowHeight(); y += ofGetWindowHeight()/15) {
+    for (int y = 0; y < ofGetWindowHeight(); y += ofGetWindowHeight()/size) {
         ofSetColor(0, 0, 0);
         ofDrawLine(0, y, ofGetWindowWidth() , y);
     }
 
-    for (int x = 0; x < ofGetWindowWidth(); x+=ofGetWindowWidth()/15) {
+    for (int x = 0; x < ofGetWindowWidth(); x+=ofGetWindowWidth()/size) {
         ofSetColor(0, 0, 0);
         ofDrawLine(x, 0, x , ofGetWindowHeight());
     }
@@ -165,32 +165,25 @@ void gomoku::drawBoard(){
     }
 }
 
-//void gomoku::drawRecord(){
-//    for (int i = 0; i < records.size(); i++) {
-//        int x = std::get<0>(records.at(i));
-//        int y = std::get<1>(records.at(i));
-//        if (std::get<2>(records.at(i)) == BLACK) {
-//            ofSetColor(0, 0, 0);
-//            ofDrawCircle(x, y, 25);
-//        } else if (std::get<2>(records.at(i)) == WHITE) {
-//            ofSetColor(255, 255, 255);
-//            ofDrawCircle(x, y, 25);
-//        }
-//    }
-//}
-
-
-
 Boolean gomoku::isIntersection(int x, int y) {
     if (x == 0 || y == 0) {
         return false;
     }
-    return ((x % (ofGetWindowWidth() / 15) == 0) && (y % (ofGetWindowHeight() / 15) == 0));
+    return ((x % (ofGetWindowWidth() / size) == 0) && (y % (ofGetWindowHeight() / size) == 0));
 }
 
 Boolean gomoku::autoDraw(int x, int y) {
     if (current_state == END) {
         return false;
+    }
+    if (isIntersection(x, y)){
+        xPos = x;
+        yPos = y;
+        if (board[(xPos / unit_width) - 1][(yPos / unit_height) - 1] == EMPTY) {
+            return true;
+        } else {
+            return false;
+        }
     }
     for (int xp = 0; xp < ofGetWindowWidth(); xp++) {
         for (int yp = 0; yp < ofGetWindowHeight(); yp++) {
@@ -230,6 +223,14 @@ void gomoku::printBoard() {
     std::cout << std::endl;
 }
 
+void gomoku::getWinnerName(int num) {
+    if (num == BLACK) {
+        winner = "Black";
+    } else {
+        winner = "White";
+    }
+}
+
 Boolean gomoku::isWin() {
     
     for (int i = 0; i < size - 1; ++i) {
@@ -238,19 +239,14 @@ Boolean gomoku::isWin() {
 
             //skip the ones that are in the middle of a connection (only validate the ones that are at front)
 
-            if (j > 0 && j < size - 2 && i > 0 && i < size - 2
-                && (((board[j - 1][i]) == current_color)
-                || ((board[j][i-1]) == current_color)
-                || ((board[j-1][i-1]) == current_color)
-                || ((board[j+1][i-1]) == current_color))) {
-                    continue;
-                }
+            
                 
             //check right - connect 5
             if (board[j][i] != EMPTY && (j + 4) <= (size - 2)) {
                 for (int count = 1; count < 5; count++) {
                     if (board[j + count][i] == current_color) {
                         if (count == 4) {
+                            getWinnerName(current_color);
                             return true;
                         }
                     } else {
@@ -265,6 +261,7 @@ Boolean gomoku::isWin() {
                 for (int count = 1; count < 5; count++) {
                     if (board[j + count][i + count] == current_color) {
                         if (count == 4) {
+                            getWinnerName(current_color);
                             return true;
                         }
                     } else {
@@ -279,6 +276,7 @@ Boolean gomoku::isWin() {
                 for (int count = 1; count < 5; count++) {
                     if (board[j][i + count] == current_color) {
                         if (count == 4) {
+                            getWinnerName(current_color);
                             return true;
                         }
                     } else {
@@ -294,6 +292,7 @@ Boolean gomoku::isWin() {
                 for (int count = 1; count < 5; count++) {
                     if (board[j - count][i + count] == current_color) {
                         if (count == 4) {
+                            getWinnerName(current_color);
                             return true;
                         }
                     } else {

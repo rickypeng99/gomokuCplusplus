@@ -20,12 +20,14 @@ class gomoku : public ofBaseApp{
     const int EMPTY = 0;
     const int BLACK = 1;
     const int WHITE = 2;
+    
 
     const int size = 15; // The size of the board, 15 means 15*15
     int unit_width;
     int unit_height;
 
     int board[14][14];
+    string winner;
     
     DrawType current_draw;
     GameState current_state;
@@ -53,6 +55,7 @@ class gomoku : public ofBaseApp{
     int xPos;
     int yPos;
     void printBoard();
+    void getWinnerName(int num);
     
 
     Boolean isIntersection(int x, int y);
@@ -60,7 +63,11 @@ class gomoku : public ofBaseApp{
     Boolean isWin();
 
     Boolean should_update;
+    
+    void placeUnder(int x, int y);
+    
+    int evaluate(int x, int y);
 
-    //std::tuple<int, int, int> dot;
-    //vector<std::tuple<int, int, int>> records;
 };
+
+
