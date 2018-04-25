@@ -20,7 +20,7 @@ void gomoku::setup(){
 
     current_draw = MAKE_BLACK;
     current_state = START;
-    
+
     unit_width = ofGetWindowWidth() / size;
     unit_height = ofGetWindowHeight() / size;
 
@@ -37,9 +37,9 @@ void gomoku::draw(){
     if (current_state == START) {
         drawBoard();
     }
-    
+
         if (current_state == PLACE) {
-            
+
             if (current_draw == MAKE_BLACK) {
                 ofSetColor(0, 0, 0);
                 ofDrawCircle(xPos, yPos, 25);
@@ -53,7 +53,7 @@ void gomoku::draw(){
 
             }
         }
-    
+
        else if (current_state == END) {
         ofSetColor(0, 0, 0);
         ofDrawBitmapString(winner + " has won!\nPress R to restart!", ofGetWindowWidth() / 2, ofGetWindowHeight() / 2);
@@ -64,7 +64,7 @@ void gomoku::draw(){
 //--------------------------------------------------------------
 void gomoku::keyPressed(int key){
     int upper_key = toupper(key); // Standardize on upper case
-    
+
     if (upper_key == 'R' && current_state == END) {
         // Pause or unpause
         current_state = START;
@@ -96,14 +96,14 @@ void gomoku::mousePressed(int x, int y, int button){
             current_state = PLACE;
             draw();
             //printBoard();
-            
+
             if (isWin()) {
                 //std::cout << "win!" << std::endl;
                 current_state = END;
                 draw();
             }
-            
-            
+
+
             if (current_state != END) {
                 changeTurn();
                 robotMove((xPos / unit_width), (yPos / unit_height));
@@ -219,7 +219,7 @@ void gomoku::printBoard() {
         }
         std::cout << std::endl;
     }
-    
+
     std::cout << std::endl;
 }
 
@@ -232,15 +232,15 @@ void gomoku::getWinnerName(int num) {
 }
 
 Boolean gomoku::isWin() {
-    
+
     for (int i = 0; i < size - 1; ++i) {
         for (int j = 0; j < size - 1; ++j) {
             int current_color = board[j][i];
 
             //skip the ones that are in the middle of a connection (only validate the ones that are at front)
 
-    
-                
+
+
             //check right - connect 5
             if (board[j][i] != EMPTY && (j + 4) <= (size - 2)) {
                 for (int count = 1; count < 5; count++) {
@@ -254,7 +254,7 @@ Boolean gomoku::isWin() {
                     }
                 }
             }
-            
+
             //check downward right - connect 5
             if (board[j][i] != EMPTY && (i + 4) <= (size - 2) && (j + 4) <= (size - 2)) {
                 int current_color = board[j][i];
@@ -269,7 +269,7 @@ Boolean gomoku::isWin() {
                     }
                 }
             }
-            
+
             //check downward - connect 5
             if (board[j][i] != EMPTY && (i + 4) <= (size - 2)) {
                 int current_color = board[j][i];
@@ -284,9 +284,9 @@ Boolean gomoku::isWin() {
                     }
                 }
             }
-            
+
             //check downward left - connect 5
-            
+
             if (board[j][i] != EMPTY && (i + 4) <= (size - 2) && (j - 4) >= 0) {
                 int current_color = board[j][i];
                 for (int count = 1; count < 5; count++) {

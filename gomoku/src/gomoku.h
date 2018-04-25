@@ -18,7 +18,7 @@ enum renjuType {
     DOWN,
     DOWNRIGHT,
     DOWNLEFT
-}
+};
 
 class gomoku : public ofBaseApp{
 
@@ -27,7 +27,7 @@ class gomoku : public ofBaseApp{
     const int EMPTY = 0;
     const int BLACK = 1;
     const int WHITE = 2;
-    
+
 
     const int size = 15; // The size of the board, 15 means 15*15
     int unit_width;
@@ -35,7 +35,7 @@ class gomoku : public ofBaseApp{
 
     int board[14][14];
     string winner;
-    
+
     DrawType current_draw;
     GameState current_state;
     ofColor intersection;
@@ -63,22 +63,20 @@ class gomoku : public ofBaseApp{
     int yPos;
     void printBoard();
     void getWinnerName(int num);
-    
+
 
     Boolean isIntersection(int x, int y);
     Boolean autoDraw(int x, int y);
     Boolean isWin();
 
     Boolean should_update;
-    
+
     void robotMove(int x, int y);
-    
+
     int evaluate(int x, int y);
     int evaluateWhite(int x, int y);
-    
-    void checkFree(renjuType type , int renju, int i, int j);
-    
+
+    Boolean checkFree(renjuType type , int renju, int i, int j);
+
 
 };
-
-
