@@ -7,11 +7,10 @@
 
 #include "gomoku.h"
 
-void gomoku::placeUnder(int x, int y){
-
-        //要记住autodraw的坐标永远为原样，而添加进board数组的坐标需要各减一。
+void gomoku::robotMove(int x, int y){
     
-std::vector<tuple<int,int,int>> results;
+    //evaluate defensive
+    std::vector<tuple<int,int,int>> results;
     
     for (int i = 0; i < size - 1; i++) {
         for (int j = 0; j < size - 1; j++) {
@@ -51,6 +50,8 @@ std::vector<tuple<int,int,int>> results;
     int bestX = std::get<1>(bestCombo);
     int bestY = std::get<2>(bestCombo);
     
+    //evaluate offensive
+    
     
     
         if (autoDraw((bestX + 1) * unit_width, (bestY + 1) * unit_height)) {
@@ -78,7 +79,7 @@ int gomoku::evaluate(int x, int y) {
     for (int i = 0; i < size - 1; ++i) {
         for (int j = 0; j < size - 1; ++j) {
             
-            if (board[j][i] == EMPTY) {
+            if (board[j][i] == EMPTY)  {
                 continue;
             }
             
@@ -171,6 +172,12 @@ int gomoku::evaluate(int x, int y) {
     }
     
     return result;
+}
+
+void gomoku::checkFree(renjuType type, int renju, int i, int j) {
+    if (type == RIGHT && board[j - 1][i] == EMPTY && board[j + renju][]) {
+        
+    }
 }
 
 

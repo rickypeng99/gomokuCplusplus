@@ -106,7 +106,7 @@ void gomoku::mousePressed(int x, int y, int button){
             
             if (current_state != END) {
                 changeTurn();
-                placeUnder((xPos / unit_width), (yPos / unit_height));
+                robotMove((xPos / unit_width), (yPos / unit_height));
                 current_state = NO_PLACE;
             }
 
@@ -239,7 +239,7 @@ Boolean gomoku::isWin() {
 
             //skip the ones that are in the middle of a connection (only validate the ones that are at front)
 
-            
+    
                 
             //check right - connect 5
             if (board[j][i] != EMPTY && (j + 4) <= (size - 2)) {

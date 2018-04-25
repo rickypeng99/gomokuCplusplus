@@ -13,6 +13,13 @@ enum GameState {
     END
 };
 
+enum renjuType {
+    RIGHT,
+    DOWN,
+    DOWNRIGHT,
+    DOWNLEFT
+}
+
 class gomoku : public ofBaseApp{
 
     public:
@@ -64,9 +71,13 @@ class gomoku : public ofBaseApp{
 
     Boolean should_update;
     
-    void placeUnder(int x, int y);
+    void robotMove(int x, int y);
     
     int evaluate(int x, int y);
+    int evaluateWhite(int x, int y);
+    
+    void checkFree(renjuType type , int renju, int i, int j);
+    
 
 };
 
