@@ -94,13 +94,22 @@ int gomoku::evaluate(int x, int y) {
                 for (int count = 1; count < 5; count++) {
                     if (board[j + count][i] == BLACK) {
                         if (count == 3) {
+                            if (board[j][i] == BLACK && checkFree(RIGHT, 3, i, j)) {
+                                result += 1000;
+                            }
                             result += 500;
                         }
 
                         if (count == 2) {
+                            if (board[j][i] == BLACK && checkFree(RIGHT, 2, i, j)) {
+                                result += 10;
+                            }
                             result += 10;
                         }
                         if (count == 4) {
+                            if (board[j][i] == BLACK && checkFree(RIGHT, 4, i, j)) {
+                                result += 2000;
+                            }
                             result += 1000;
                         }
                     } else {
@@ -114,9 +123,11 @@ int gomoku::evaluate(int x, int y) {
                 for (int count = 1; count < 5; count++) {
                     if (board[j + count][i + count] == BLACK) {
                         if (count == 3) {
+                            
                             result += 500;
                         }
                         if (count == 2) {
+                            
                             result += 10;
                         }
                         if (count == 4) {
