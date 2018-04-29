@@ -19,7 +19,9 @@ void gomoku::setup(){
     intersection.b = 169;
 
     current_draw = MAKE_BLACK;
-    current_state = START;
+    current_state = CHOOSE;
+    current_mode = UNDECIDED;
+
 
     unit_width = ofGetWindowWidth() / size;
     unit_height = ofGetWindowHeight() / size;
@@ -34,6 +36,14 @@ void gomoku::update(){
 
 //--------------------------------------------------------------
 void gomoku::draw(){
+
+    if (current_state == CHOOSE) {
+        ofSetColor(0, 0, 0);
+        ofDrawBitmapString("Please pick the game mode!\nPress 1 for AI mode\nPress 2 for Versus mode!", ofGetWindowWidth() / 2, ofGetWindowHeight() / 2);
+
+
+    }
+
     if (current_state == START) {
         drawBoard();
     }
@@ -68,10 +78,35 @@ void gomoku::keyPressed(int key){
     if (upper_key == 'R' && current_state == END) {
         // Pause or unpause
         current_state = START;
+
+        current_draw = MAKE_BLACK;
         ofClear(182, 155, 76);
         memset(board, 0, sizeof(board));
         draw();
     }
+
+    if (upper_key == 'A' && current_mode == AI
+                         && current_state == START) {
+        // Pause or unpause
+
+        while (!isWin()) {
+        robotMove((xPos / unit_width), (yPos / unit_height));
+        }
+    }
+
+    if (key == '1' && current_mode == UNDECIDED) {
+        ofClear(182, 155, 76);
+        current_mode = AI;
+        current_state = START;
+    }
+
+    if (key == '2' && current_mode == UNDECIDED) {
+        ofClear(182, 155, 76);
+        current_mode = VERSUS;
+        current_state = START;
+    }
+
+
 }
 
 //--------------------------------------------------------------
@@ -106,7 +141,9 @@ void gomoku::mousePressed(int x, int y, int button){
 
             if (current_state != END) {
                 changeTurn();
-                robotMove((xPos / unit_width), (yPos / unit_height));
+                if (current_mode == AI) {
+                    robotMove((xPos / unit_width), (yPos / unit_height));
+                }
                 current_state = NO_PLACE;
             }
 
@@ -302,5 +339,6 @@ Boolean gomoku::isWin() {
             }
         }
     }
+
     return false;
 }

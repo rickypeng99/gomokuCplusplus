@@ -7,10 +7,17 @@ enum DrawType {
 };
 
 enum GameState {
+    CHOOSE,
     START,
     NO_PLACE,
     PLACE,
     END
+};
+
+enum PlayType{
+    AI,
+    VERSUS,
+    UNDECIDED
 };
 
 enum renjuType {
@@ -38,7 +45,9 @@ class gomoku : public ofBaseApp{
 
     DrawType current_draw;
     GameState current_state;
+    PlayType current_mode;
     ofColor intersection;
+
 
         // Methods to interact with the UI
         void setup();
