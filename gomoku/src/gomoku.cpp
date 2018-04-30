@@ -2,6 +2,7 @@
 #include <math.h>
 
 
+
 //--------------------------------------------------------------
 void gomoku::setup(){
 
@@ -91,6 +92,7 @@ void gomoku::keyPressed(int key){
 
         while (!isWin()) {
         robotMove((xPos / unit_width), (yPos / unit_height));
+
         }
     }
 

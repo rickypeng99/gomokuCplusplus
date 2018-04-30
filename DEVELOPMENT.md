@@ -11,5 +11,8 @@ I have finished validation
 ## 2018 - Apr 23rd
 I have built a simple AI, it is woking pretty well
 
+## 2018 - Apr 29th
+The player is now able to pick which mode to play (Versus AI or 1v1 mode)
+
 ## Future goal
 Build a better AI with minimax tree and alpha-beta pruning.
