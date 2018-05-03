@@ -20,4 +20,5 @@ So for my AI, I simulated how the opponent will move, and suppose that the oppon
 ## Library using:
 math library <br>
 I need to write equations with it. <br>
-BigNumber - C++ class for creating and computing arbitrary-length integers
+ofSoundPlayer <br>
+I use this to play the sound when a player moves.

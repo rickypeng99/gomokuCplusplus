@@ -26,6 +26,8 @@ void gomoku::setup(){
 
     unit_width = ofGetWindowWidth() / size;
     unit_height = ofGetWindowHeight() / size;
+    
+    mySound.load("click.wav");
 
 
 }
@@ -55,11 +57,13 @@ void gomoku::draw(){
                 ofSetColor(0, 0, 0);
                 ofDrawCircle(xPos, yPos, 25);
                 board[(xPos / unit_width) - 1][(yPos / unit_height) - 1] = BLACK;
+                mySound.play();
 
             } else if (current_draw == MAKE_WHITE) {
                 ofSetColor(255, 255, 255);
                 ofDrawCircle(xPos, yPos, 25);
                 board[(xPos / unit_width) - 1][(yPos / unit_height) - 1] = WHITE;
+                mySound.play();
 
 
             }
@@ -145,8 +149,9 @@ void gomoku::mousePressed(int x, int y, int button){
                 changeTurn();
                 if (current_mode == AI) {
                     robotMove((xPos / unit_width), (yPos / unit_height));
+                } else {
+                    current_state = NO_PLACE;
                 }
-                current_state = NO_PLACE;
             }
 
         }
@@ -204,6 +209,13 @@ void gomoku::drawBoard(){
     }
 }
 
+
+/**
+ Check if the current position is an intersection where you can place go pieces
+ @param x X of position
+ @param y Y of position
+ @return true if it is an intersection
+ */
 Boolean gomoku::isIntersection(int x, int y) {
     if (x == 0 || y == 0) {
         return false;
@@ -211,6 +223,14 @@ Boolean gomoku::isIntersection(int x, int y) {
     return ((x % (ofGetWindowWidth() / size) == 0) && (y % (ofGetWindowHeight() / size) == 0));
 }
 
+
+/**
+ Draw a go piece at the intersection which is the closest to where the user clicks, such that the go pieces can be drawn right on the intersection point.
+
+ @param x X
+ @param y Y
+ @return true if successfully auto drawn (the user's click is not too far away from the intersection, typically, the click use be within the little gray circles).
+ */
 Boolean gomoku::autoDraw(int x, int y) {
     if (current_state == END) {
         return false;
@@ -240,6 +260,10 @@ Boolean gomoku::autoDraw(int x, int y) {
     return false;
 }
 
+
+/**
+ Change turn after each player
+ */
 void gomoku::changeTurn() {
     if (current_draw == MAKE_BLACK) {
         current_draw = MAKE_WHITE;
@@ -250,7 +274,10 @@ void gomoku::changeTurn() {
     }
 }
 
-//printing the trasnpose of the matrix, which digitally visulizes the game board and stones.
+
+/**
+ printing the trasnpose of the matrix, which digitally visulizes the game board and stones.
+ */
 void gomoku::printBoard() {
     for (int i = 0; i < size - 1; ++i) {
         for (int j = 0; j < size - 1; ++j) {
@@ -262,6 +289,12 @@ void gomoku::printBoard() {
     std::cout << std::endl;
 }
 
+
+/**
+ Get the winner's name
+
+ @param num the current state.
+ */
 void gomoku::getWinnerName(int num) {
     if (num == BLACK) {
         winner = "Black";
@@ -269,6 +302,7 @@ void gomoku::getWinnerName(int num) {
         winner = "White";
     }
 }
+
 
 Boolean gomoku::isWin() {
 

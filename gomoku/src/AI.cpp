@@ -21,8 +21,8 @@ void gomoku::robotMove(int x, int y){
                     for (int j = 0; j < size - 1; j++) {
                         if (board[i][j] == EMPTY) {
                             board[i][j] = BLACK;
-                            int scoreAI = evaluateWhite(x, y);
-                            int scoreHuman = evaluate(x, y);
+                            int scoreAI = evaluate(x,y, WHITE);
+                            int scoreHuman = evaluate(x, y, BLACK);
                             int score = scoreHuman - scoreAI;
                             results.push_back(make_tuple(score, i, j));
                             board[i][j] = EMPTY;
@@ -73,162 +73,13 @@ void gomoku::robotMove(int x, int y){
             current_state = NO_PLACE;
         }
 }
-int gomoku::evaluateWhite(int x, int y) {
+
+
+int gomoku::evaluate(int x, int y, int currentColor) {
 
     int result = 0;
-
-
-
-    for (int i = 0; i < size - 1; ++i) {
-        for (int j = 0; j < size - 1; ++j) {
-
-            if (board[j][i] == EMPTY || board[j][i] == BLACK)  {
-                continue;
-            }
-
-            //int current_color = board[j][i];
-
-            //skip the ones that are in the middle of a connection (only validate the ones that are at front)
-
-
-
-            //check right - connect 4
-            if ((j + 4) <= (size - 2)) {
-                for (int count = 1; count < 5; count++) {
-                    if (board[j + count][i] == WHITE) {
-                        if (count == 1) {
-                            result += 5;
-                        }
-                        if (count == 3) {
-                            if (board[j][i] == WHITE && checkFree(RIGHT, 3, i, j)) {
-                                result += 1000;
-                            }
-                            result += 500;
-                        }
-
-                        if (count == 2) {
-                            if (board[j][i] == WHITE && checkFree(RIGHT, 2, i, j)) {
-                                result += 10;
-                            }
-                            result += 10;
-                        }
-                        if (count == 4) {
-                            if (board[j][i] == WHITE && checkFree(RIGHT, 4, i, j)) {
-                                result += 2000;
-                            }
-                            result += 1000;
-                        }
-                    } else {
-                        break;
-                    }
-                }
-            }
-
-            //check downward right - connect 4
-            if ((i + 4) <= (size - 2) && (j + 4) <= (size - 2)) {
-                for (int count = 1; count < 5; count++) {
-                    if (board[j + count][i + count] == WHITE) {
-                        if (count == 1) {
-                            result += 5;
-                        }
-                        if (count == 3) {
-                            if (board[j][i] == WHITE && checkFree(DOWNRIGHT, 3, i, j)) {
-                                result += 1000;
-                            }
-                            result += 500;
-                        }
-                        if (count == 2) {
-                            if (board[j][i] == WHITE && checkFree(DOWNRIGHT, 2, i, j)) {
-                                result += 10;
-                            }
-                            result += 10;
-                        }
-                        if (count == 4) {
-                            if (board[j][i] == WHITE && checkFree(DOWNRIGHT, 4, i, j)) {
-                                result += 2000;
-                            }
-                            result += 1000;
-                        }
-                    } else {
-                        break;
-                    }
-                }
-            }
-
-            //check downward - connect 4
-            if ((i + 4) <= (size - 2)) {
-                for (int count = 1; count < 5; count++) {
-                    if (board[j][i + count] == WHITE) {
-                        if (count == 1) {
-                            result += 5;
-                        }
-                        if (count == 3) {
-                            if (board[j][i] == WHITE && checkFree(DOWN, 3, i, j)) {
-                                result += 1000;
-                            }
-                            result += 500;
-                        }
-                        if (count == 2) {
-                            if (board[j][i] == WHITE && checkFree(DOWN, 2, i, j)) {
-                                result += 10;
-                            }
-                            result += 10;
-                        }
-                        if (count == 4) {
-                            if (board[j][i] == WHITE && checkFree(DOWN, 4, i, j)) {
-                                result += 2000;
-                            }
-                            result += 1000;
-                        }
-                    } else {
-                        break;
-                    }
-                }
-            }
-
-            //check downward left - connect 4
-
-            if ((i + 4) <= (size - 2) && (j - 4) >= 0) {
-                for (int count = 1; count < 5; count++) {
-                    if (board[j - count][i + count] == WHITE) {
-                        if (count == 1) {
-                            result += 5;
-                        }
-                        if (count == 3) {
-                            if (board[j][i] == WHITE && checkFree(DOWNLEFT, 3, i, j)) {
-                                result += 1000;
-                            }
-                            result += 500;
-                        }
-                        if (count == 2) {
-                            if (board[j][i] == WHITE && checkFree(DOWNLEFT, 2, i, j)) {
-                                result += 10;
-                            }
-                            result += 10;
-                        }
-                        if (count == 4) {
-                            if (board[j][i] == WHITE && checkFree(DOWNLEFT, 4, i, j)) {
-                                result += 2000;
-                            }
-                            result += 1000;
-                        }
-                    } else {
-                        break;
-                    }
-                }
-            }
-
-
-
-        }
-    }
-
-    return result;
-}
-int gomoku::evaluate(int x, int y) {
-
-    int result = 0;
-
+    int opponent;
+    
 
 
     for (int i = 0; i < size - 1; ++i) {
@@ -247,25 +98,25 @@ int gomoku::evaluate(int x, int y) {
             //check right - connect 4
             if ((j + 4) <= (size - 2)) {
                 for (int count = 1; count < 5; count++) {
-                    if (board[j + count][i] == BLACK) {
+                    if (board[j + count][i] == currentColor) {
                         if (count == 1) {
                             result += 5;
                         }
                         if (count == 3) {
-                            if (board[j][i] == BLACK && checkFree(RIGHT, 3, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(RIGHT, 3, i, j)) {
                                 result += 1000;
                             }
                             result += 500;
                         }
 
                         if (count == 2) {
-                            if (board[j][i] == BLACK && checkFree(RIGHT, 2, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(RIGHT, 2, i, j)) {
                                 result += 10;
                             }
                             result += 10;
                         }
                         if (count == 4) {
-                            if (board[j][i] == BLACK && checkFree(RIGHT, 4, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(RIGHT, 4, i, j)) {
                                 result += 2000;
                             }
                             result += 1000;
@@ -279,24 +130,24 @@ int gomoku::evaluate(int x, int y) {
             //check downward right - connect 4
             if ((i + 4) <= (size - 2) && (j + 4) <= (size - 2)) {
                 for (int count = 1; count < 5; count++) {
-                    if (board[j + count][i + count] == BLACK) {
+                    if (board[j + count][i + count] == currentColor) {
                         if (count == 1) {
                             result += 5;
                         }
                         if (count == 3) {
-                            if (board[j][i] == BLACK && checkFree(DOWNRIGHT, 3, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(DOWNRIGHT, 3, i, j)) {
                                 result += 1000;
                             }
                             result += 500;
                         }
                         if (count == 2) {
-                            if (board[j][i] == BLACK && checkFree(DOWNRIGHT, 2, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(DOWNRIGHT, 2, i, j)) {
                                 result += 10;
                             }
                             result += 10;
                         }
                         if (count == 4) {
-                            if (board[j][i] == BLACK && checkFree(DOWNRIGHT, 4, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(DOWNRIGHT, 4, i, j)) {
                                 result += 2000;
                             }
                             result += 1000;
@@ -310,24 +161,24 @@ int gomoku::evaluate(int x, int y) {
             //check downward - connect 4
             if ((i + 4) <= (size - 2)) {
                 for (int count = 1; count < 5; count++) {
-                    if (board[j][i + count] == BLACK) {
+                    if (board[j][i + count] == currentColor) {
                         if (count == 1) {
                             result += 5;
                         }
                         if (count == 3) {
-                            if (board[j][i] == BLACK && checkFree(DOWN, 3, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(DOWN, 3, i, j)) {
                                 result += 1000;
                             }
                             result += 500;
                         }
                         if (count == 2) {
-                            if (board[j][i] == BLACK && checkFree(DOWN, 2, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(DOWN, 2, i, j)) {
                                 result += 10;
                             }
                             result += 10;
                         }
                         if (count == 4) {
-                            if (board[j][i] == BLACK && checkFree(DOWN, 4, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(DOWN, 4, i, j)) {
                                 result += 2000;
                             }
                             result += 1000;
@@ -342,24 +193,24 @@ int gomoku::evaluate(int x, int y) {
 
             if ((i + 4) <= (size - 2) && (j - 4) >= 0) {
                 for (int count = 1; count < 5; count++) {
-                    if (board[j - count][i + count] == BLACK) {
+                    if (board[j - count][i + count] == currentColor) {
                         if (count == 1) {
                             result += 5;
                         }
                         if (count == 3) {
-                            if (board[j][i] == BLACK && checkFree(DOWNLEFT, 3, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(DOWNLEFT, 3, i, j)) {
                                 result += 1000;
                             }
                             result += 500;
                         }
                         if (count == 2) {
-                            if (board[j][i] == BLACK && checkFree(DOWNLEFT, 2, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(DOWNLEFT, 2, i, j)) {
                                 result += 10;
                             }
                             result += 10;
                         }
                         if (count == 4) {
-                            if (board[j][i] == BLACK && checkFree(DOWNLEFT, 4, i, j)) {
+                            if (board[j][i] == currentColor && checkFree(DOWNLEFT, 4, i, j)) {
                                 result += 2000;
                             }
                             result += 1000;

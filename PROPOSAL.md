@@ -11,4 +11,5 @@ However, a simpler AI is also ok for my project since I believe that the above a
 ## Library using:
 math library <br>
 I need to write equations with it.<br>
-BigNumber - C++ class for creating and computing arbitrary-length integers
+ofSoundPlayer <br>
+I use this to play the sound when a player moves.
