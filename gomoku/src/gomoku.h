@@ -91,8 +91,7 @@ class gomoku : public ofBaseApp{
 
     // AI related methods
     void robotMove(int x, int y);
-    int evaluate(int x, int y);
-    int evaluateWhite(int x, int y);
+    int evaluate(int x, int y, int currentColor);
     Boolean checkFree(renjuType type , int renju, int i, int j);
 
 

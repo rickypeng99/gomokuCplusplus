@@ -80,7 +80,7 @@ void gomoku::draw(){
 void gomoku::keyPressed(int key){
     int upper_key = toupper(key); // Standardize on upper case
 
-    if (upper_key == 'R' && current_state == END) {
+    if (upper_key == 'R') {
         // Pause or unpause
         current_state = START;
 
