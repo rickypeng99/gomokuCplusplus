@@ -10,7 +10,6 @@ I set the background color to be the same as wood, the I draw lines in both hori
 The user can click at any point that has a distance within 5 from the intersection. So even if the user didn't click right on the intersection, the user can still draw a piece that at point. The program will automatically generate a piece at which is the closest to where the user clicks.  <br>
 
 ## How did I do the AI part?
-I tried to read documentations of minimax trees and alpha-beta pruning, but I still found it hard to implement these techniques to my project. However, I still managed to create a simpler AI by myself. <br>
 The first thing I did is to set up a function that giving a rating to the current turn. For instance, if one has three pieces in a row, one can have a 500 points for that turn. The higher the points, the more likely for that plater to achieve a five in a row. <br>
 So for my AI, I simulated how the opponent will move, and suppose that the opponent will place his/her piece at the point that will create the highest points for that turn. Then, I place my piece at that position to prevent the opponent from achieving that situation. Hence, my AI is able to block most of the moves of the opponent's.
 
